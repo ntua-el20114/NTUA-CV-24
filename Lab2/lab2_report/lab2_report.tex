@@ -80,20 +80,86 @@
 		\item Αυξάνοντας τον αριθμό των κλιμάκων πάνω από το 5, φαίνεται να μην εμφανίζεται σημαντική διαφορά στο αποτέλεσμα.
 	\end{itemize}
 	
+	\newpage
 	\section*{Μέρος 2: Εντοπισμός Χωρο-χρονικών Σημείων Ενδιαφέροντος και Εξαγωγή Χαρακτηριστικών σε Βίντεο Ανθρωπίνων Δράσεων}
 	\subsection*{2.1 Χωρο-χρονικά Σημεία Ενδιαφέροντος}
-	\paragraph{2.1.1}
-	\paragraph{2.1.2} 
-	\paragraph{2.1.3} 
-	\paragraph{2.1.4} 
+	\paragraph{} Πραγματοποιήθηκε η υλοποίηση των δύο ανιχνευτών. Οι περιοχές με χαμηλό κριτήριο γωνιότητας απορρίφθηκαν χρησιμοποιώντας τη συνθήκη Σ2 με προεπιλεγμένη τιμή $\theta_corn = 0.2$ για τον Harris detector και $\theta_corn = 0.02$ για τον Gabor detector. 
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{2_1_4_hb}
+			\caption{Harris - boxing}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{2_1_4_hr}
+			\caption{Harris - running}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{2_1_4_hw}
+			\caption{Harris - walking}
+		\end{subfigure}
+		
+		\begin{subfigure}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{2_1_4_gb}
+			\caption{Gabor - boxing}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{2_1_4_gr}
+			\caption{Gabor - running}
+		\end{subfigure}
+		\hfill
+		\begin{subfigure}{0.3\textwidth}
+			\includegraphics[width=\textwidth]{2_1_4_gw}
+			\caption{Gabor - walking}
+		\end{subfigure}
+		
+		\caption{Παραδείγματα σημείων ενδιαφέροντος ανά ανιχνευτή και δαστηριότητα.}
+	\end{figure}
+	\paragraph{} Παρατηρούμε ότι τα σημεία ενδιαφέροντος που επιλέχθηκαν από τον ανιχνευτή Harris είναι συγκετρωμένα σε μικρότερες χωρικές περιοχές και χρονικά διαστήματα. Αντιθέτως, ο ανιχνευτής Gabor επιστρέφει σημεία πιο "απλωμένα" στον χώρο και στον χρόνο. Αυτό επαληθεύεται αν παρατηρήσουμε τη μη κατωφλιομένη συνάρτηση γωνιότητας του κάθε ανιχνευτή:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\linewidth]{2_1_4_cornerness}
+		\caption{Κριτήρια γωνιότητας για ένα επιλεγμένο frame (boxing).}
+	\end{figure}
 	\subsection*{2.2 Χωρο-χρονικοί Ιστογραφικοί Περιγραφητές}
-	\paragraph{2.2.1} 
-	\paragraph{2.2.2}
+	\paragraph{2.2.1} Υπολογίστηκε το gradient και η οπτική ροή για κάθε pixel. Παρακάτω φαίνονται τα αποτελέσματα για το επιλεγμένο frame:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{2_2_1}
+		\caption{Gradient και οπτική ροή για το frame 42.}
+	\end{figure}
+	\paragraph{2.2.2} Υλοποιήθηκε η συνάρτηση $getDescriptors()$, που κάνει τους απαραίτητους υπολογισμούς και επιστρέφει τους περιγραφητές HOG, HOF ή HOG/HOF. Γρήγορα βλέπουμε ότι ο περιγραφητής HOF είναι αρκετά πιο αργός στον υπολογισμό, λόγω της πολυπλοκότητας υπολογισμού της οπτικής ροής.
 	\subsection*{2.3 Κατασκευή Bag of Visual Words και χρήση Support Vector Machines για την ταξινόμηση δράσεων}
-	\paragraph{2.3.1} 
-	\paragraph{2.3.2} 
-	\paragraph{2.3.3}
-	\paragraph{2.3.4}
+	\paragraph{} Έγινε ο χωρισμός του training set και test set και για κάθε συνδιασμό ανιχνευτή-περιγραφητή βρέθηκε το BoVW. Παρακάτω φαίνονται τα αποτελέσματα:
+	\begin{lstlisting}
+		
+		===========================================
+		Testing Harris detector with HOG descriptor
+		Accuracy: 0.75
+		===========================================
+		Testing Harris detector with HOF descriptor
+		Accuracy: 0.6666666666666666
+		===============================================
+		Testing Harris detector with HOG-HOF descriptor
+		Accuracy: 0.75
+		==========================================
+		Testing Gabor detector with HOG descriptor
+		Accuracy: 1.0
+		==========================================
+		Testing Gabor detector with HOF descriptor
+		Accuracy: 0.9166666666666666
+		==============================================
+		Testing Gabor detector with HOG-HOF descriptor
+		Accuracy: 1.0
+	\end{lstlisting}
+	\paragraph{Σχόλια: }
+	\begin{itemize}
+		\item Σε κάθε περίπτωση, ο ανιχνευτής Gabor βγάζει οδηγεί σε αποτελέσματα από τον ανιχνευτή Harris.
+		\item Ο περιγραφητής HOG οδηγεί σε αρκετά καλύτερα αποτελέσματα σε σχέση με τον περιγραφητή HOF. Μάλιστα, ο περιγραφητής HOG/HOF δεν παρουσιάζει καν βελτίωση σε σχέση με τον HOF, αποτέλεσμα αρκετά απρόβλεπτο.
+	\end{itemize}
 	
 	\section*{Μέρος 3: Συνένωση Εικόνων (Image Stitching) για Δημιουργία Πανοράματος}
 	\subsection*{Βήμα 1}
